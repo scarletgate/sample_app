@@ -3,12 +3,16 @@ class TodolistsController < ApplicationController
     @list = List.new
   end
   def create
-    list = List.new(list_params)
-    list.save
-    redirect_to todolist_path(list.id)
+    @list = List.new(list_params)
+    if @list.save
+      redirect_to todolist_path(@list.id)
+    else
+      render :new
+    end
   end
+
   def index
-    @lists = List.all  
+    @lists = List.all
   end
   def show
     @list = List.find(params[:id])
@@ -21,7 +25,7 @@ class TodolistsController < ApplicationController
     list.update(list_params)
     redirect_to todolist_path(list.id)
   end
-  
+
   private
   def list_params
     params.require(:list).permit(:title, :body, :image)
